@@ -151,6 +151,19 @@ Vertex* getAllVertices(string filename)
 	return allVertices;
 }
 
+void printAllVertices(Vertex* allVertices, int numTriangles)
+{
+	int triangleCount = 0;
+	for (int i = 0; i < numTriangles * 3; i++)
+	{
+		if (i % 3 == 0) {cout << "Triangle " << ++triangleCount << endl;}
+		Vertex v;
+		v = allVertices[i];
+		cout << v.x << " " << v.y << " " << v.z << " ";
+		cout << v.r << " " << v.b << " " << v.g << " " << v.a << endl;
+	}
+}
+
 ///////////////////////////////////////////////////////////////
 // Main Part of program
 ///////////////////////////////////////////////////////////////
@@ -195,6 +208,7 @@ int main(int argc, char** argv) {
 	int numTriangles = getNumTriangles(filename);
 	Vertex* allVertices;
 	allVertices = getAllVertices(filename);
+	//printAllVertices(allVertices, numTriangles);
 
 	GLuint indices[] = { 0, 1, 3, 1, 2, 3 };
 
