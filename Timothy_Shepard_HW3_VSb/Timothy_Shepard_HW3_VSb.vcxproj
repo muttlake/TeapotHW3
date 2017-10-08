@@ -75,7 +75,7 @@
       <WarningLevel>Level3</WarningLevel>
       <Optimization>Disabled</Optimization>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\shepb\Courses\Cosc4370\Glew and Glut\glew-1.11.0\include;C:\Users\shepb\Courses\Cosc4370\Glew and Glut\freeglut\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\shepb\Courses\Cosc4370\glm-0.9.8.5\glm;C:\Users\shepb\Courses\Cosc4370\Glew and Glut\glew-1.11.0\include;C:\Users\shepb\Courses\Cosc4370\Glew and Glut\freeglut\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
@@ -97,7 +97,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <AdditionalIncludeDirectories>C:\Users\shepb\Courses\Cosc4370\Glew and Glut\glew-1.11.0\include;C:\Users\shepb\Courses\Cosc4370\Glew and Glut\freeglut\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Users\shepb\Courses\Cosc4370\glm-0.9.8.5\glm;C:\Users\shepb\Courses\Cosc4370\Glew and Glut\glew-1.11.0\include;C:\Users\shepb\Courses\Cosc4370\Glew and Glut\freeglut\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>_CRT_SECURE_NO_WARNINGS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
