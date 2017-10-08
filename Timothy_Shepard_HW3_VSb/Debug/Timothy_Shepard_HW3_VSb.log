@@ -1,2 +1,6 @@
-﻿  Timothy_Shepard_HW3_VSb.vcxproj -> C:\Users\shepb\Courses\Cosc4370\Timothy_Shepard_HW3_VSb\Debug\Timothy_Shepard_HW3_VSb.exe
+﻿  main.cpp
+c:\users\shepb\courses\cosc4370\timothy_shepard_hw3_vsb\timothy_shepard_hw3_vsb\main.cpp(142): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\shepb\courses\cosc4370\timothy_shepard_hw3_vsb\timothy_shepard_hw3_vsb\main.cpp(143): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+c:\users\shepb\courses\cosc4370\timothy_shepard_hw3_vsb\timothy_shepard_hw3_vsb\main.cpp(144): warning C4244: '=': conversion from 'double' to 'GLfloat', possible loss of data
+  Timothy_Shepard_HW3_VSb.vcxproj -> C:\Users\shepb\Courses\Cosc4370\Timothy_Shepard_HW3_VSb\Debug\Timothy_Shepard_HW3_VSb.exe
   Timothy_Shepard_HW3_VSb.vcxproj -> C:\Users\shepb\Courses\Cosc4370\Timothy_Shepard_HW3_VSb\Debug\Timothy_Shepard_HW3_VSb.pdb (Partial PDB)

@@ -1,8 +1,9 @@
 // 
 //  Timothy Shepard
-//  HW2
-//  Rectangle with Shaders
+//  HW3
+//  Teapot Transformations
 //
+
 #include <Windows.h>
 #include <GL/glew.h>
 #include <GL/freeglut.h>
@@ -15,7 +16,7 @@
 
 using namespace std;
 
-const int NUM_VERTICES = 4;
+const int NUM_VERTICES = 2687;
 const int NUM_INDICES = 2687;
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
@@ -29,15 +30,6 @@ struct Vertex {
 	GLfloat x, y, z;
 	GLfloat r, g, b, a;
 };
-
-struct ShapeData {
-	Vertex* vertices;
-	GLuint numVertices;
-	GLushort* indices;
-	GLuint numIndices;
-};
-
-
 
 ///////////////////////////////////////////////////////////////
 // Read and Compile Shaders from tutorial
@@ -147,6 +139,9 @@ Vertex* getAllVertices(string filename)
 		ss << currentLine;
 		Vertex newVertex;
 		ss >> newVertex.x >> newVertex.y >> newVertex.z;
+		newVertex.x = newVertex.x / 3.5;
+		newVertex.y = newVertex.y / 3.5;
+		newVertex.z = newVertex.z / 3.5;
 		ss >> newVertex.r >> newVertex.g >> newVertex.b >> newVertex.a;
 		allVertices[currentIndex] = newVertex;
 		currentIndex++;
@@ -189,7 +184,11 @@ void printAllPositions(glm::vec3* allPositions, int numVertices)
 	cout << "Printing all position vec3:\n";
 	for (int i = 0; i < numVertices; i++)
 	{
-		cout << "Position For Vertex: " << i << " ";
+		if (i % 3 == 0)
+		{
+			cout << "Triangle: " << int(i / 3 + 0.5) << "\n";
+		}
+		cout << "Position For Vertex " << i << ": ";
 		cout << allPositions[i][0] << " " << allPositions[i][1];
 		cout << " " << allPositions[i][2] << endl;
 	}
@@ -200,7 +199,11 @@ void printAllColors(glm::vec4* allColors, int numVertices)
 	cout << "Printing all color vec4:\n";
 	for (int i = 0; i < numVertices; i++)
 	{
-		cout << "Color For Vertex: " << i << " ";
+		if (i % 3 == 0)
+		{
+			cout << "Triangle: " << int(i / 3 + 0.5) << "\n";
+		}
+		cout << "Color For Vertex " << i << ": ";
 		cout << allColors[i][0] << " " << allColors[i][1] << " ";
 		cout << allColors[i][2] << " " << allColors[i][3] << endl;
 	}
@@ -271,8 +274,8 @@ int main(int argc, char** argv) {
 
 	int numIndices;
 	numIndices = numVertices;
-	GLuint* triangleIndices;
-	triangleIndices = getTriangleIndicesArray(numVertices);
+	GLuint* vindices;
+	vindices = getTriangleIndicesArray(numVertices);
 	//printTriangleIndices(triangleIndices, numVertices);
 	//printAllPositions(vpositions, numVertices);
 	//printAllColors(vcolors, numVertices);
@@ -286,22 +289,6 @@ int main(int argc, char** argv) {
 	glewInit();  //glewInit() for Windows only
 	cout << "OpenGL Version: " << glGetString(GL_VERSION) << endl;
 	cout << "GL Shading Language Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n\n";
-
-	GLfloat vertices[] = { -0.5f,  0.5f, 0.0f, // 0
-		-0.5f, -0.5f, 0.0f, // 1
-		0.5f, -0.5f, 0.0f, // 2
-		0.5f,  0.5f, 0.0f  // 3
-	};
-	GLfloat colors[] = { 1.0f, 1.00f, 1.0f, 1.0f, // 0
-		1.0f, 0.00f, 0.0f, 1.0f, // 1
-		0.0f, 1.00f, 0.0f, 1.0f, // 2
-		0.0f, 0.00f, 1.0f, 1.0f  // 3
-	};
-
-	GLuint indices[] = { 0, 1, 3, 1, 2, 3 };
-
-
-	
 
 	// Make a shader
 	char* vertexShaderSourceCode = readFile("vertexShader.vsh");
@@ -318,13 +305,13 @@ int main(int argc, char** argv) {
 
 	glGenBuffers(1, &vbo);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, 7 * numVertices * sizeof(GLfloat), NULL, GL_STATIC_DRAW); //Create buffer
-	glBufferSubData(GL_ARRAY_BUFFER, 0, 3 * numVertices * sizeof(GLfloat), vpositions);  // Put data in buffer
-	glBufferSubData(GL_ARRAY_BUFFER, 3 * numVertices * sizeof(GLfloat), 4 * numVertices * sizeof(GLfloat), vcolors);
+	glBufferData(GL_ARRAY_BUFFER, 7 * NUM_VERTICES * sizeof(GLfloat), NULL, GL_STATIC_DRAW); //Create buffer
+	glBufferSubData(GL_ARRAY_BUFFER, 0, 3 * NUM_VERTICES * sizeof(GLfloat), vpositions);  // Put data in buffer
+	glBufferSubData(GL_ARRAY_BUFFER, 3 * NUM_VERTICES * sizeof(GLfloat), 4 * NUM_VERTICES * sizeof(GLfloat), vcolors);
 
 	glGenBuffers(1, &indexBufferID);
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, numIndices * sizeof(GLuint), triangleIndices, GL_STATIC_DRAW); // Put indices in buffer as Gluint
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, NUM_INDICES * sizeof(GLuint), vindices, GL_STATIC_DRAW); // Put indices in buffer as Gluint
 
 																								  // Find the position of the variables in the shader
     positionID = glGetAttribLocation(shaderProgramID, "s_vPosition");
@@ -339,9 +326,22 @@ int main(int argc, char** argv) {
 	glutMainLoop();
 
 	delete[] allVertices;
-	delete[] triangleIndices;
+	delete[] vindices;
 	delete[] vpositions;
 	delete[] vcolors;
 
 	return 0;
 }
+
+//GLfloat vertices[] = { -0.5f,  0.5f, 0.0f, // 0
+//	-0.5f, -0.5f, 0.0f, // 1
+//	0.5f, -0.5f, 0.0f, // 2
+//	0.5f,  0.5f, 0.0f  // 3
+//};
+//GLfloat colors[] = { 1.0f, 1.00f, 1.0f, 1.0f, // 0
+//	1.0f, 0.00f, 0.0f, 1.0f, // 1
+//	0.0f, 1.00f, 0.0f, 1.0f, // 2
+//	0.0f, 0.00f, 1.0f, 1.0f  // 3
+//};
+
+//GLuint indices[] = { 0, 1, 3, 1, 2, 3 };
