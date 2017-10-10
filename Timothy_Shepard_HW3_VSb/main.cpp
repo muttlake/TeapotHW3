@@ -8,6 +8,10 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <glm/glm.hpp>
+#include <glm/vec3.hpp>
+#include <glm/mat4x4.hpp>
+#include <glm/gtx/transform.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 #include <stdio.h>
 #include <iostream>
 #include <string>
@@ -139,9 +143,9 @@ Vertex* getAllVertices(string filename)
 		ss << currentLine;
 		Vertex newVertex;
 		ss >> newVertex.x >> newVertex.y >> newVertex.z;
-		newVertex.x = newVertex.x / 3.5;
-		newVertex.y = newVertex.y / 3.5;
-		newVertex.z = newVertex.z / 3.5;
+		//newVertex.x = newVertex.x / 3.5;
+		//newVertex.y = newVertex.y / 3.5;
+		//newVertex.z = newVertex.z / 3.5;
 		ss >> newVertex.r >> newVertex.g >> newVertex.b >> newVertex.a;
 		allVertices[currentIndex] = newVertex;
 		currentIndex++;
@@ -154,15 +158,15 @@ Vertex* getAllVertices(string filename)
 void printAllVertices(Vertex* allVertices, int numTriangles)
 {
 	int triangleCount = 0;
-	cout << "Printing all vertices.\n";
+	std::cout << "Printing all vertices.\n";
 	for (int i = 0; i < numTriangles * 3; i++)
 	{
-		if (i % 3 == 0) {cout << "Triangle " << ++triangleCount << endl;}
+		if (i % 3 == 0) {std::cout << "Triangle " << ++triangleCount << endl;}
 		Vertex v;
 		v = allVertices[i];
-		cout << "Vertex: " << i << " ";
-		cout << v.x << " " << v.y << " " << v.z << " ";
-		cout << v.r << " " << v.b << " " << v.g << " " << v.a << endl;
+		std::cout << "Vertex: " << i << " ";
+		std::cout << v.x << " " << v.y << " " << v.z << " ";
+		std::cout << v.r << " " << v.b << " " << v.g << " " << v.a << endl;
 	}
 }
 
@@ -181,31 +185,31 @@ glm::vec3* buildPositionsVec3s(Vertex* allVertices, int numVertices)
 
 void printAllPositions(glm::vec3* allPositions, int numVertices)
 {
-	cout << "Printing all position vec3:\n";
+	std::cout << "Printing all position vec3:\n";
 	for (int i = 0; i < numVertices; i++)
 	{
 		if (i % 3 == 0)
 		{
-			cout << "Triangle: " << int(i / 3 + 0.5) << "\n";
+			std::cout << "Triangle: " << int(i / 3 + 0.5) << "\n";
 		}
-		cout << "Position For Vertex " << i << ": ";
-		cout << allPositions[i][0] << " " << allPositions[i][1];
-		cout << " " << allPositions[i][2] << endl;
+		std::cout << "Position For Vertex " << i << ": ";
+		std::cout << allPositions[i][0] << " " << allPositions[i][1];
+		std::cout << " " << allPositions[i][2] << endl;
 	}
 }
 
 void printAllColors(glm::vec4* allColors, int numVertices)
 {
-	cout << "Printing all color vec4:\n";
+	std::cout << "Printing all color vec4:\n";
 	for (int i = 0; i < numVertices; i++)
 	{
 		if (i % 3 == 0)
 		{
-			cout << "Triangle: " << int(i / 3 + 0.5) << "\n";
+			std::cout << "Triangle: " << int(i / 3 + 0.5) << "\n";
 		}
-		cout << "Color For Vertex " << i << ": ";
-		cout << allColors[i][0] << " " << allColors[i][1] << " ";
-		cout << allColors[i][2] << " " << allColors[i][3] << endl;
+		std::cout << "Color For Vertex " << i << ": ";
+		std::cout << allColors[i][0] << " " << allColors[i][1] << " ";
+		std::cout << allColors[i][2] << " " << allColors[i][3] << endl;
 	}
 }
 
@@ -235,10 +239,10 @@ GLuint* getTriangleIndicesArray(int numVertices)
 
 void printTriangleIndices(GLuint* triangleIndices, int numVertices)
 {
-	cout << "Printing all indices.\n";
+	std::cout << "Printing all indices.\n";
 	for (int i = 0; i < numVertices; i++)
 	{
-		cout << triangleIndices[i] << "\n";
+		std::cout << triangleIndices[i] << "\n";
 	}
 }
 
@@ -258,6 +262,74 @@ void render() {
 	glutSwapBuffers();
 }
 
+void switchMVP(unsigned char key, int xmouse, int ymouse)
+{
+	GLuint MatrixID = glGetUniformLocation(shaderProgramID, "MVP");
+	glm::mat4 M = glm::mat4(1.0f);
+	glm::mat4 P = glm::mat4(1.0f);
+	glm::mat4 V = glm::mat4(1.0f);
+	glm::mat4 MVP = P*V*M;
+
+	switch (key) {
+	case '1':
+		//#1 Orthographic Projection, Camera Transformation
+		P = glm::ortho(-8.0f, 8.0f, -6.0f, 6.0f, 1.0f, 100.0f);
+		V = glm::lookAt(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		MVP = P*V*M;
+		break;
+
+	case '2':
+		//#2 Orthographic Projection, Camera Transformation
+		P = glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, 1.0f, 100.0f);
+		V = glm::lookAt(glm::vec3(0.0f, 10.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 2.0f));
+		MVP = P*V*M;
+		break;
+
+	case '3':
+		//#3 Model Transformation, Orthographic Projection, Camera Transformation
+		M = translate(M, glm::vec3(0.0f, -1.0f, 0.0f));
+		P = glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, 1.0f, 100.0f);
+		V = glm::lookAt(glm::vec3(0.0f, 10.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 2.0f));
+		MVP = P*V*M;
+		break;
+
+	case '4':
+		//#4 Model Transformation, Perspective Projection, Camera Transformation
+		M = glm::translate(M, glm::vec3(0.0f, -1.0f, 0.0f));
+		P = glm::perspective(20.0f, 4.0f / 3.0f, 1.0f, 100.0f);
+		V = glm::lookAt(glm::vec3(0.0f, 0.0f, 20.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f));
+		MVP = P*V*M;
+		break;
+
+	case '5':
+		//#5 Model Transformation, Perspective Projection, Camera Transformation
+		M = glm::translate(M, glm::vec3(0.0f, -1.0f, 0.0f));
+		P = glm::perspective(30.0f, 4.0f / 3.0f, 1.0f, 100.0f);
+		V = glm::lookAt(glm::vec3(10.0f, 10.0f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		MVP = P*V*M;
+		break;
+
+	case '6':
+		//#6 Model Transformation, Perspective Projection, Camera Transformation
+		M = glm::rotate(M, 45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
+		M = glm::translate(M, glm::vec3(0.0f, -1.0f, 0.0f));
+		P = glm::perspective(70.0f, 4.0f / 3.0f, 1.0f, 100.0f);
+		V = glm::lookAt(glm::vec3(3.0f, 3.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		MVP = P*V*M;
+		break;
+
+	default:
+		//Default copy number 1
+		P = glm::ortho(-8.0f, 8.0f, -6.0f, 6.0f, 1.0f, 100.0f);
+		V = glm::lookAt(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+		MVP = P*V*M;
+		break;
+	}
+
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+	glutPostRedisplay(); //request display() call ASAP
+}
+
 int main(int argc, char** argv) {
 
 	// Get vertices from Tris.txt file
@@ -266,7 +338,7 @@ int main(int argc, char** argv) {
 	Vertex* allVertices;
 	allVertices = getAllVertices(filename);
 	int numVertices = numTriangles * 3;
-	//printAllVertices(allVertices, numTriangles);
+	printAllVertices(allVertices, numTriangles);
 	glm::vec3* vpositions;
 	vpositions = buildPositionsVec3s(allVertices, numVertices);
 	glm::vec4* vcolors;
@@ -278,7 +350,7 @@ int main(int argc, char** argv) {
 	vindices = getTriangleIndicesArray(numVertices);
 	//printTriangleIndices(triangleIndices, numVertices);
 	//printAllPositions(vpositions, numVertices);
-	//printAllColors(vcolors, numVertices);
+	printAllColors(vcolors, numVertices);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
@@ -287,8 +359,8 @@ int main(int argc, char** argv) {
 	glutReshapeFunc(changeViewport);
 	glutDisplayFunc(render);
 	glewInit();  //glewInit() for Windows only
-	cout << "OpenGL Version: " << glGetString(GL_VERSION) << endl;
-	cout << "GL Shading Language Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n\n";
+	std::cout << "OpenGL Version: " << glGetString(GL_VERSION) << endl;
+	std::cout << "GL Shading Language Version: " << glGetString(GL_SHADING_LANGUAGE_VERSION) << "\n\n";
 
 	// Make a shader
 	char* vertexShaderSourceCode = readFile("vertexShader.vsh");
@@ -320,6 +392,19 @@ int main(int argc, char** argv) {
 	glVertexAttribPointer(positionID, 3, GL_FLOAT, GL_FALSE, 0, 0);
 	glVertexAttribPointer(colorID, 4, GL_FLOAT, GL_FALSE, 0, BUFFER_OFFSET(sizeof(vpositions)));
 	glUseProgram(shaderProgramID);
+
+	// Start by showing view #1
+	glm::mat4 M = glm::mat4(1.0f);
+	glm::mat4 P = glm::ortho(-8.0f, 8.0f, -6.0f, 6.0f, 1.0f, 100.0f);
+	glm::mat4 V = glm::lookAt(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
+	glm::mat4 MVP = P*V*M;
+	GLuint MatrixID = glGetUniformLocation(shaderProgramID, "MVP");
+	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
+
+	glutKeyboardFunc(switchMVP);
+
+
+
 	glEnableVertexAttribArray(positionID);
 	glEnableVertexAttribArray(colorID);
 
@@ -343,5 +428,4 @@ int main(int argc, char** argv) {
 //	0.0f, 1.00f, 0.0f, 1.0f, // 2
 //	0.0f, 0.00f, 1.0f, 1.0f  // 3
 //};
-
 //GLuint indices[] = { 0, 1, 3, 1, 2, 3 };
