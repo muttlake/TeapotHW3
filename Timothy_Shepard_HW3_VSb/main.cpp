@@ -8,10 +8,7 @@
 #include <GL/glew.h>
 #include <GL/freeglut.h>
 #include <glm/glm.hpp>
-#include <glm/vec3.hpp>
-#include <glm/mat4x4.hpp>
 #include <glm/gtx/transform.hpp>
-#include <glm/gtc/matrix_transform.hpp>
 #include <stdio.h>
 #include <iostream>
 #include <string>
