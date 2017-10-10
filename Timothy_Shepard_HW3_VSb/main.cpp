@@ -257,6 +257,7 @@ void changeViewport(int w, int h) {
 
 // render
 void render() {
+	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glDrawElements(GL_TRIANGLES, NUM_INDICES, GL_UNSIGNED_INT, NULL);
 	glutSwapBuffers();
@@ -296,7 +297,7 @@ void switchMVP(unsigned char key, int xmouse, int ymouse)
 	case '4':
 		//#4 Model Transformation, Perspective Projection, Camera Transformation
 		M = glm::translate(M, glm::vec3(0.0f, -1.0f, 0.0f));
-		P = glm::perspective(20.0f, 4.0f / 3.0f, 1.0f, 100.0f);
+		P = glm::perspective(glm::radians(20.0f), 4.0f / 3.0f, 1.0f, 100.0f);
 		V = glm::lookAt(glm::vec3(0.0f, 0.0f, 20.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 1.0f, 0.0f));
 		MVP = P*V*M;
 		break;
@@ -304,7 +305,7 @@ void switchMVP(unsigned char key, int xmouse, int ymouse)
 	case '5':
 		//#5 Model Transformation, Perspective Projection, Camera Transformation
 		M = glm::translate(M, glm::vec3(0.0f, -1.0f, 0.0f));
-		P = glm::perspective(30.0f, 4.0f / 3.0f, 1.0f, 100.0f);
+		P = glm::perspective(glm::radians(30.0f), 4.0f / 3.0f, 1.0f, 100.0f);
 		V = glm::lookAt(glm::vec3(10.0f, 10.0f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		MVP = P*V*M;
 		break;
@@ -313,7 +314,7 @@ void switchMVP(unsigned char key, int xmouse, int ymouse)
 		//#6 Model Transformation, Perspective Projection, Camera Transformation
 		M = glm::rotate(M, 45.0f, glm::vec3(1.0f, 0.0f, 0.0f));
 		M = glm::translate(M, glm::vec3(0.0f, -1.0f, 0.0f));
-		P = glm::perspective(70.0f, 4.0f / 3.0f, 1.0f, 100.0f);
+		P = glm::perspective(glm::radians(70.0f), 4.0f / 3.0f, 1.0f, 100.0f);
 		V = glm::lookAt(glm::vec3(3.0f, 3.0f, 3.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		MVP = P*V*M;
 		break;
@@ -336,7 +337,7 @@ int main(int argc, char** argv) {
 	Vertex* allVertices;
 	allVertices = getAllVertices(filename);
 	int numVertices = numTriangles * 3;
-	printAllVertices(allVertices, numTriangles);
+	//printAllVertices(allVertices, numTriangles);
 	glm::vec3* vpositions;
 	vpositions = buildPositionsVec3s(allVertices, numVertices);
 	glm::vec4* vcolors;
@@ -348,11 +349,11 @@ int main(int argc, char** argv) {
 	vindices = getTriangleIndicesArray(numVertices);
 	//printTriangleIndices(triangleIndices, numVertices);
 	//printAllPositions(vpositions, numVertices);
-	printAllColors(vcolors, numVertices);
+	//printAllColors(vcolors, numVertices);
 
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DOUBLE | GLUT_DEPTH);
-	glutInitWindowSize(512, 512);
+	glutInitWindowSize(700, 700);
 	glutCreateWindow("Timothy_Shepard_HW3.zip");
 	glutReshapeFunc(changeViewport);
 	glutDisplayFunc(render);
