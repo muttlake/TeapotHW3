@@ -320,9 +320,7 @@ void switchMVP(unsigned char key, int xmouse, int ymouse)
 
 	default:
 		//Default copy number 1
-		P = glm::ortho(-8.0f, 8.0f, -6.0f, 6.0f, 1.0f, 100.0f);
-		V = glm::lookAt(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
-		MVP = P*V*M;
+		glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 		break;
 	}
 
@@ -385,7 +383,7 @@ int main(int argc, char** argv) {
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, indexBufferID);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, NUM_INDICES * sizeof(GLuint), vindices, GL_STATIC_DRAW); // Put indices in buffer as Gluint
 
-																								  // Find the position of the variables in the shader
+	// Find the position of the variables in the shader
     positionID = glGetAttribLocation(shaderProgramID, "s_vPosition");
 	colorID = glGetAttribLocation(shaderProgramID, "s_vColor");
 
@@ -402,8 +400,6 @@ int main(int argc, char** argv) {
 	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
 	glutKeyboardFunc(switchMVP);
-
-
 
 	glEnableVertexAttribArray(positionID);
 	glEnableVertexAttribArray(colorID);
