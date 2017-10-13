@@ -140,9 +140,6 @@ Vertex* getAllVertices(string filename)
 		ss << currentLine;
 		Vertex newVertex;
 		ss >> newVertex.x >> newVertex.y >> newVertex.z;
-		//newVertex.x = newVertex.x / 3.5;
-		//newVertex.y = newVertex.y / 3.5;
-		//newVertex.z = newVertex.z / 3.5;
 		ss >> newVertex.r >> newVertex.g >> newVertex.b >> newVertex.a;
 		allVertices[currentIndex] = newVertex;
 		currentIndex++;
@@ -256,14 +253,19 @@ void changeViewport(int w, int h) {
 void render() {
 	glEnable(GL_DEPTH_TEST);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	glDrawElements(GL_TRIANGLES, NUM_INDICES, GL_UNSIGNED_INT, NULL);
+	//glDrawElements(GL_TRIANGLES, NUM_INDICES, GL_UNSIGNED_INT, NULL);
+	glDrawArrays(GL_TRIANGLES, 0, NUM_INDICES);
 	glutSwapBuffers();
 }
 
 void switchMVP(unsigned char key, int xmouse, int ymouse)
 {
 	GLuint MatrixID = glGetUniformLocation(shaderProgramID, "MVP");
-	glm::mat4 M = glm::mat4(1.0f);
+	glm::mat4 M = glm::mat4( 1.0f, 0.0f, 0.0f, 0.0f,
+					         0.0f, 1.0f, 0.0f, 0.0f,
+					         0.0f, 0.0f, 1.0f, 0.0f,
+					         0.0f, 0.0f, 0.0f, 1.0f );
+	glm::mat4 T = glm::mat4(1.0f);
 	glm::mat4 P = glm::mat4(1.0f);
 	glm::mat4 V = glm::mat4(1.0f);
 	glm::mat4 MVP = P*V*M;
@@ -285,9 +287,14 @@ void switchMVP(unsigned char key, int xmouse, int ymouse)
 
 	case '3':
 		//#3 Model Transformation, Orthographic Projection, Camera Transformation
-		M = translate(M, glm::vec3(0.0f, -1.0f, 0.0f));
-		P = glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, 1.0f, 100.0f);
-		V = glm::lookAt(glm::vec3(0.0f, 10.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 2.0f));
+		//M = glm::translate(M, glm::vec3(0.0f, -1.0f, 0.0f));
+		//P = glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, 1.0f, 100.0f);
+		//V = glm::lookAt(glm::vec3(0.0f, 10.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 2.0f));
+		// Changed #3 to match picture
+		M = glm::translate(M, glm::vec3(0.0f, -1.0f, 0.0f));
+		M = glm::scale(M, glm::vec3(1.5f, 1.5f, 1.5f));
+		P = glm::perspective(glm::radians(30.0f), 4.0f / 3.0f, 1.0f, 100.0f);
+		V = glm::lookAt(glm::vec3(10.0f, 10.0f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 		MVP = P*V*M;
 		break;
 
@@ -334,7 +341,7 @@ int main(int argc, char** argv) {
 	Vertex* allVertices;
 	allVertices = getAllVertices(filename);
 	int numVertices = numTriangles * 3;
-	printAllVertices(allVertices, numTriangles);
+	//printAllVertices(allVertices, numTriangles);
 	glm::vec3* vpositions;
 	vpositions = buildPositionsVec3s(allVertices, numVertices);
 	glm::vec4* vcolors;
@@ -344,7 +351,7 @@ int main(int argc, char** argv) {
 	numIndices = numVertices;
 	GLuint* vindices;
 	vindices = getTriangleIndicesArray(numVertices);
-	printTriangleIndices(vindices, numVertices);
+	//printTriangleIndices(vindices, numVertices);
 	//printAllPositions(vpositions, numVertices);
 	//printAllColors(vcolors, numVertices);
 
@@ -395,6 +402,10 @@ int main(int argc, char** argv) {
 	glm::mat4 P = glm::ortho(-8.0f, 8.0f, -6.0f, 6.0f, 1.0f, 100.0f);
 	glm::mat4 V = glm::lookAt(glm::vec3(0.0f, 0.0f, 10.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(0.0f, 1.0f, 0.0f));
 	glm::mat4 MVP = P*V*M;
+	//M = glm::translate(M, glm::vec3(0.0f, -1.0f, 0.0f));
+	//glm::mat4 P = glm::ortho(-4.0f, 4.0f, -3.0f, 3.0f, 1.0f, 100.0f);
+	//glm::mat4 V = glm::lookAt(glm::vec3(0.0f, 10.0f, 0.0f), glm::vec3(0.0f, 0.0f, 0.0f), glm::vec3(1.0f, 0.0f, 2.0f));
+	//glm::mat4 MVP = P*V*M;
 	GLuint MatrixID = glGetUniformLocation(shaderProgramID, "MVP");
 	glUniformMatrix4fv(MatrixID, 1, GL_FALSE, &MVP[0][0]);
 
@@ -424,3 +435,9 @@ int main(int argc, char** argv) {
 //	0.0f, 0.00f, 1.0f, 1.0f  // 3
 //};
 //GLuint indices[] = { 0, 1, 3, 1, 2, 3 };
+//glm::mat4 Proj = glm::perspective(glm::radians(45.f), 1.33f, 0.1f, 10.f);
+//glm::mat4 ViewTranslate = glm::translate(glm::mat4(1.f), Translate);     
+//glm::mat4 ViewRotateX = glm::rotate(ViewTranslate, Orientation.y, Up);     
+//glm::mat4 View = glm::rotate(ViewRotateX, Orientation.x, Up);     
+//glm::mat4 Model = glm::mat4(1.0f)
+//return Proj * View * Model;
