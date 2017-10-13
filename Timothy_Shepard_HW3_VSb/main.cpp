@@ -17,8 +17,8 @@
 
 using namespace std;
 
-const int NUM_VERTICES = 2687;
-const int NUM_INDICES = 2687;
+const int NUM_VERTICES = 2688;
+const int NUM_INDICES = 2688;
 
 #define BUFFER_OFFSET(i) ((char *)NULL + (i))
 GLuint shaderProgramID;
@@ -334,7 +334,7 @@ int main(int argc, char** argv) {
 	Vertex* allVertices;
 	allVertices = getAllVertices(filename);
 	int numVertices = numTriangles * 3;
-	//printAllVertices(allVertices, numTriangles);
+	printAllVertices(allVertices, numTriangles);
 	glm::vec3* vpositions;
 	vpositions = buildPositionsVec3s(allVertices, numVertices);
 	glm::vec4* vcolors;
@@ -344,7 +344,7 @@ int main(int argc, char** argv) {
 	numIndices = numVertices;
 	GLuint* vindices;
 	vindices = getTriangleIndicesArray(numVertices);
-	//printTriangleIndices(triangleIndices, numVertices);
+	printTriangleIndices(vindices, numVertices);
 	//printAllPositions(vpositions, numVertices);
 	//printAllColors(vcolors, numVertices);
 
